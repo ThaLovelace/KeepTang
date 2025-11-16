@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="home_filter_options">
+        <item>This Month</item>
+        <item>This Week</item>
+        <item>Today</item>
+        <item>Custom</item>
+    </string-array>
+</resources>

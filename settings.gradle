@@ -1,0 +1,32 @@
+pluginManagement {
+    repositories {
+        google {
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
+        mavenCentral()
+        gradlePluginPortal()
+
+        // ✅✅✅ "Bug Fix" (แก้ไข) #1 ✅✅✅
+        // ( "เพิ่ม" (Add) 'jitpack.io' ... เผื่อ (In case) "Plugin" (Plugin) "อนาคต" (Future) "ต้อง" (Need) "ใช้" (Use))
+        maven { url 'https://jitpack.io' }
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+
+        // ✅✅✅ "Bug Fix" (แก้ไข) #2 (นี่คือ "หัวใจ" (Core)!) ✅✅✅
+        // ( "เพิ่ม" (Add) 'jitpack.io' ...
+        // ... เพื่อ "แก้" (Fix) "Bug" (บั๊ก) 'Cannot resolve...PieChart')
+        maven { url 'https://jitpack.io' }
+    }
+}
+
+rootProject.name = "KeepTang"
+include ':app'

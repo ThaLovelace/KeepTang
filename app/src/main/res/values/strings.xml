@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">KeepTang</string>
+
+    <string name="home_title">Home</string>
+    <string name="default_points">100</string>
+    <string name="income">Income</string>
+    <string name="paid">Paid</string>
+    <string name="transaction_title">Transaction</string>
+
+    <string name="nav_calendar">Calendar</string>
+    <string name="nav_add">Add</string>
+    <string name="nav_chart">Chart</string>
+    <string name="nav_more">More</string>
+
+    <string name="calendar_total">Total</string>
+
+    <string name="nav_back">Back</string>
+    <string name="nav_save">Save</string>
+    <string name="category_icon_desc">Category Icon</string>
+    <string name="picker_title">CATEGORY</string>
+    <string name="error_fill_all">Please fill all fields</string>
+    <string name="toast_saved">Saved!</string>
+    <string name="toast_error">Error saving!</string>
+    <string name="picker_not_selected">Not Selected</string>
+    <string name="total_balance">฿ %,.2f</string>
+    <string name="total_income">+ ฿ %,.2f</string>
+    <string name="total_expense">- ฿ %,.2f</string>
+
+    <string name="toast_coming_soon">Coming Soon!</string>
+</resources>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="16dp"
+    android:background="@drawable/rounded_corner_top_white"
+    android:clickable="true"
+    android:focusable="true"
+
+    android:layout_margin="8dp">
+    <ImageView
+        android:id="@+id/picker_icon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:contentDescription="@string/category_icon_desc"
+        tools:src="@drawable/icon_food" />
+    <TextView
+        android:id="@+id/picker_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        tools:text="Food" />
+</LinearLayout>

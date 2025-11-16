@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  นี่คือ "กรอบรูป" (The Shell) v15.1 (ฉบับ Hi-fi 80%) [cite: user, user]
+  (เรา "แก้" (Fix) 2 อย่าง: "ลบ" (Remove) 'paddingTop' [cite: user] ...
+  ... และ "ใส่สี" (Add Color) [cite: user, Gemini_Generated_Image_c12oq8c12oq8c12o.jpg] ที่ 'BottomNavigationView')
+-->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <!--
+      (✅ "Bug Fix" #1: "ลบ" (Remove) 'android:paddingTop="?attr/actionBarSize"' [cite: user]...
+      ... เพราะ "Top Bar" (Top Bar) [cite: user] ของเรา... มัน "อยู่" (Lives) "ข้างใน" (Inside) "Fragment" [cite: user, user] ...
+      ... (ถ้า "ไม่" (Not) ลบ... "Top Bar" (Top Bar) [cite: user] ของเราจะ "โดน" (Get) "ดัน" (Pushed) ลงมา))
+    -->
+
+    <!-- "Navi Bar 5 แท็บ" (The "Frame" Part 1) [cite: user, user] -->
+    <!--
+      ✅ "Hi-fi 80% Fix" [cite: user, user]: "เปลี่ยน" (Change) "พื้นหลัง" (Background) [cite: user] ...
+      ... จาก "?android:attr/windowBackground" (สีเทา/ขาว) [cite: user] ...
+      ... เป็น "@color/yellow" (สีเหลืองกระปุก) [cite: user, Gemini_Generated_Image_c12oq8c12oq8c12o.jpg] (จาก 'colors.xml' [cite: user])
+    -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:menu="@menu/bottom_nav_menu" /> <!-- (เราต้อง "สร้าง" (Create) ไฟล์นี้ "ต่อ" (Next)) [cite: user] -->
+
+    <!-- "พื้นที่ว่าง" (The "Empty Space" / Host) (The "Frame" Part 2) [cite: user] -->
+    <FrameLayout
+        android:id="@+id/nav_host_fragment_activity_main"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/nav_view"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <!-- (นี่คือ "ที่" (Place) ที่ 'MainActivity.java' [cite: user] ...
+         ... จะ "ยัด" (Inject) 'fragment_home.xml' [cite: user] เข้ามา) -->
+
+</androidx.constraintlayout.widget.ConstraintLayout>
