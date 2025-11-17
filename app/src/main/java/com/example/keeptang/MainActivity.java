@@ -68,4 +68,10 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.nav_host_fragment_activity_main, fragment);
         fragmentTransaction.commit();
     }
+
+    // ✅✅✅ ฟังก์ชันสำหรับให้หน้าอื่นสั่งย้ายกลับมาหน้า Home ✅✅✅
+    public void switchToHome() {
+        // สั่งให้ Navbar เลือกกดปุ่ม Home (มันจะไปทำงานใน Listener และโหลดหน้า Home ให้เอง)
+        binding.navView.setSelectedItemId(R.id.navigation_home);
+    }
 }

@@ -65,22 +65,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     private void seedCategories(SQLiteDatabase db) {
-        // (เราจะ INSERT 11 หมวดหมู่ที่เราลิสต์ไว้ ลงไป)
         String insertSQL = "INSERT INTO " + TABLE_CATEGORIES + " (" + COL_CAT_NAME + ", " + COL_CAT_ICON + ") VALUES ";
 
-        db.execSQL(insertSQL + "('อาหารและเครื่องดื่ม', 'icon_food');");
-        db.execSQL(insertSQL + "('การเดินทาง', 'icon_travel');");
-        db.execSQL(insertSQL + "('ช้อปปิ้ง', 'icon_shopping');");
-        db.execSQL(insertSQL + "('บิล & ค่าบริการ', 'icon_bills');");
-        db.execSQL(insertSQL + "('ความบันเทิง', 'icon_entertainment');");
-        db.execSQL(insertSQL + "('สุขภาพ', 'icon_health');");
-        db.execSQL(insertSQL + "('ที่อยู่อาศัย', 'icon_home');");
-        db.execSQL(insertSQL + "('การศึกษา', 'icon_education');");
-        db.execSQL(insertSQL + "('ของขวัญ & อื่นๆ', 'icon_gifts');");
-        db.execSQL(insertSQL + "('รายรับ', 'icon_income');");
-        db.execSQL(insertSQL + "('อื่น ๆ', 'icon_others');"); // หมวดหมู่ Default
-    }
+        db.execSQL(insertSQL + "('Food & Drink', 'icon_food');");
+        db.execSQL(insertSQL + "('Travel', 'icon_travel');");
+        db.execSQL(insertSQL + "('Shopping', 'icon_shopping');");
+        db.execSQL(insertSQL + "('Bills', 'icon_bills');");
+        db.execSQL(insertSQL + "('Entertainment', 'icon_entertainment');");
+        db.execSQL(insertSQL + "('Health', 'icon_health');");
+        db.execSQL(insertSQL + "('Home', 'icon_home');");
+        db.execSQL(insertSQL + "('Education', 'icon_education');");
+        db.execSQL(insertSQL + "('Gifts', 'icon_gifts');");
 
+        // (หมวดหมู่พิเศษ)
+        db.execSQL(insertSQL + "('Income', 'icon_income');");
+        db.execSQL(insertSQL + "('Others', 'icon_others');");
+    }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

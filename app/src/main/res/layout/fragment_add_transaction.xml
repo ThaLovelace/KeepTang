@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.input.AddTransactionFragment">
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -26,22 +27,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/icon_back"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@drawable/icon_back"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
-                    android:contentDescription="@string/nav_back" />
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Input"
                     android:textSize="24sp"
                     android:textStyle="bold"
-                    android:layout_centerInParent="true"
+                    android:layout_centerVertical="true"
                     android:textColor="@color/black"
                     tools:ignore="HardcodedText" />
 
@@ -71,8 +63,8 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="@string/paid"
-                    android:background="@color/yellow_tint"
-                    android:textColor="@color/black"
+                    android:background="@drawable/button_selector_yellow"
+                    android:textColor="@color/button_text_selector_black"
                     android:button="@null"
                     android:gravity="center"
                     android:padding="12dp"
@@ -86,8 +78,8 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="@string/income"
-                    android:background="@android:color/transparent"
-                    android:textColor="@color/black"
+                    android:background="@drawable/button_selector_yellow"
+                    android:textColor="@color/button_text_selector_black"
                     android:button="@null"
                     android:gravity="center"
                     android:padding="12dp"
@@ -135,22 +127,78 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="Date"
+                android:textColor="@color/gray"
+                android:layout_marginTop="16dp"
+                tools:ignore="HardcodedText" />
+
+            <LinearLayout
+                android:id="@+id/btn_date_picker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/rounded_edittext_white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:id="@+id/tv_selected_date"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Today"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    tools:ignore="HardcodedText" />
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/icon_calendar"
+                    android:contentDescription="Date Icon" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="Category"
                 android:textColor="@color/gray"
                 android:layout_marginTop="16dp"
                 tools:ignore="HardcodedText" />
 
-            <Button
+            <LinearLayout
                 android:id="@+id/btn_ai_category_picker"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Not Selected"
-                android:textColor="@color/black"
-                android:background="@drawable/rounded_edittext_white"
-                android:padding="16dp"
                 android:layout_marginTop="8dp"
-                android:gravity="start|center_vertical"
-                app:drawableEndCompat="@android:drawable/ic_menu_edit" />
+                android:background="@drawable/rounded_edittext_white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:id="@+id/tv_ai_category_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/picker_not_selected"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    tools:ignore="HardcodedText" />
+
+                <ImageView
+                    android:id="@+id/iv_ai_category_icon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/icon_edit"
+                    android:contentDescription="@string/category_icon_desc" />
+            </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 

@@ -44,7 +44,10 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         // --- "ยัด" (Bind) "ข้อมูล" (Data) ลง "View" (View) ---
 
         // (ยัด "ชื่อ" (Name) และ "ชื่อหมวดหมู่" (Category Name))
+        // ✅✅✅ แก้ไขตรงนี้ (บรรทัด 40-41) ✅✅✅
+        // บรรทัดบน: ให้แสดง "ชื่อที่ User พิมพ์" (เช่น 7-Eleven)
         holder.tvItemName.setText(transaction.getName());
+        // บรรทัดล่าง: ให้แสดง "ชื่อหมวดหมู่" (เช่น Food)
         holder.tvItemCategory.setText(transaction.getCategoryName());
 
         // (ยัด "ไอคอนน่ารัก" (Cute Icon))
@@ -61,7 +64,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
         // (Logic "เปลี่ยนสี" (Change Color) ... (ถ้า "ติดลบ" (Negative) -> สีแดง ... ถ้า "บวก" (Positive) -> สีดำ))
         if (price < 0) {
-            holder.tvItemAmount.setTextColor(ContextCompat.getColor(context, R.color.red)); // (ใช้ @color/red)
+            holder.tvItemAmount.setTextColor(ContextCompat.getColor(context, R.color.black)); // (ใช้ @color/red)
         } else {
             holder.tvItemAmount.setTextColor(ContextCompat.getColor(context, R.color.black)); // (ใช้ @color/black)
         }

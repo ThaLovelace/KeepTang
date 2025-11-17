@@ -70,8 +70,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:entries="@array/home_filter_options"
-                android:background="@color/red"
-                android:padding="8dp"/> <TextView
+                android:background="@drawable/rounded_edittext_white"
+                android:gravity="center_vertical"
+                android:padding="8dp"/>
+            <TextView
             android:id="@+id/tv_total_balance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
