@@ -33,7 +33,12 @@ import java.util.concurrent.Executors;
 public class CalendarFragment extends Fragment {
 
     private TextView tvPoints;
+
+    // ✅ เพิ่มตัวแปร UI ใหม่
     private TextView tvCalendarTotal;
+    private TextView tvCalendarIncome;
+    private TextView tvCalendarExpense;
+
     private CalendarView calendarView;
     private RecyclerView recyclerTransactions;
 
@@ -43,7 +48,6 @@ public class CalendarFragment extends Fragment {
     private List<Transaction> transactionList;
     private String selectedDate;
 
-    // เครื่องมือสำหรับ Background Thread
     private ExecutorService executor;
     private Handler handler;
 
@@ -56,12 +60,16 @@ public class CalendarFragment extends Fragment {
         gamificationLogic = new Gamification(getContext());
         transactionList = new ArrayList<>();
 
-        // สร้าง Executor และ Handler
         executor = Executors.newSingleThreadExecutor();
         handler = new Handler(Looper.getMainLooper());
 
         tvPoints = view.findViewById(R.id.tv_points_calendar);
+
+        // ✅ เชื่อมต่อ View ใหม่
         tvCalendarTotal = view.findViewById(R.id.tv_calendar_total);
+        tvCalendarIncome = view.findViewById(R.id.tv_calendar_income);
+        tvCalendarExpense = view.findViewById(R.id.tv_calendar_expense);
+
         calendarView = view.findViewById(R.id.calendar_view);
         recyclerTransactions = view.findViewById(R.id.recycler_transactions_calendar);
 
@@ -69,7 +77,6 @@ public class CalendarFragment extends Fragment {
         transactionAdapter = new TransactionAdapter(getContext(), transactionList);
         recyclerTransactions.setAdapter(transactionAdapter);
 
-        // ตั้งค่าวันที่เริ่มต้นเป็นวันนี้
         selectedDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Calendar.getInstance().getTime());
 
         setupCalendarListener();
@@ -80,7 +87,6 @@ public class CalendarFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        // เรียกโหลดข้อมูลใน Background Thread
         refreshData();
     }
 
@@ -89,24 +95,24 @@ public class CalendarFragment extends Fragment {
             Calendar calendar = Calendar.getInstance();
             calendar.set(year, month, dayOfMonth);
             selectedDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.getTime());
-
-            // เมื่อเปลี่ยนวันที่ ก็เรียกโหลดข้อมูลใหม่
             refreshData();
         });
     }
 
     private void refreshData() {
         executor.execute(() -> {
-            // 1. ทำงานหนัก (Query Database) ใน Background
             int currentPoints = gamificationLogic.performDailyCheckIn();
             CalendarData data = loadDataForSelectedDate();
 
-            // 2. ส่งผลลัพธ์กลับมาอัปเดต UI ใน Main Thread
             handler.post(() -> {
                 if (getContext() == null) return;
 
                 tvPoints.setText(String.valueOf(currentPoints));
-                tvCalendarTotal.setText("฿ " + String.format(Locale.getDefault(), "%,.2f", data.dailyTotal));
+
+                // ✅ อัปเดต UI ทั้ง 3 ยอด
+                tvCalendarTotal.setText("฿ " + String.format(Locale.getDefault(), "%,.2f", data.netTotal));
+                tvCalendarIncome.setText("฿ " + String.format(Locale.getDefault(), "%,.2f", data.incomeTotal));
+                tvCalendarExpense.setText("฿ " + String.format(Locale.getDefault(), "%,.2f", Math.abs(data.expenseTotal))); // ใช้ Math.abs ให้แสดงเป็นบวกสวยๆ
 
                 transactionList.clear();
                 transactionList.addAll(data.newList);
@@ -117,26 +123,40 @@ public class CalendarFragment extends Fragment {
 
     private CalendarData loadDataForSelectedDate() {
         if (getContext() == null) {
-            return new CalendarData(0, new ArrayList<>());
+            return new CalendarData(0, 0, 0, new ArrayList<>());
         }
 
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         List<Transaction> newList = new ArrayList<>();
-        double dailyTotal = 0;
+        double incomeTotal = 0;
+        double expenseTotal = 0;
 
-        // --- Query 1: สรุปยอด ---
-        Cursor summaryCursor = db.rawQuery(
+        // ✅ Query 1: หา Income ของวันนั้น (Price > 0)
+        Cursor incomeCursor = db.rawQuery(
                 "SELECT SUM(" + DatabaseHelper.COL_TR_PRICE + ") FROM " + DatabaseHelper.TABLE_TRANSACTIONS +
-                        " WHERE DATE(" + DatabaseHelper.COL_TR_TIMESTAMP + ") = ?",
+                        " WHERE DATE(" + DatabaseHelper.COL_TR_TIMESTAMP + ") = ? AND " + DatabaseHelper.COL_TR_PRICE + " > 0",
                 new String[]{selectedDate}
         );
-        if (summaryCursor.moveToFirst()) {
-            dailyTotal = summaryCursor.getDouble(0);
+        if (incomeCursor.moveToFirst()) {
+            incomeTotal = incomeCursor.getDouble(0);
         }
-        summaryCursor.close();
+        incomeCursor.close();
 
-        // --- Query 2: ลิสต์รายการ ---
-        // ✅ แก้ไข: เพิ่ม AS category_name เพื่อไม่ให้ชื่อซ้ำ
+        // ✅ Query 2: หา Expense ของวันนั้น (Price < 0)
+        Cursor expenseCursor = db.rawQuery(
+                "SELECT SUM(" + DatabaseHelper.COL_TR_PRICE + ") FROM " + DatabaseHelper.TABLE_TRANSACTIONS +
+                        " WHERE DATE(" + DatabaseHelper.COL_TR_TIMESTAMP + ") = ? AND " + DatabaseHelper.COL_TR_PRICE + " < 0",
+                new String[]{selectedDate}
+        );
+        if (expenseCursor.moveToFirst()) {
+            expenseTotal = expenseCursor.getDouble(0);
+        }
+        expenseCursor.close();
+
+        // คำนวณ Net Total
+        double netTotal = incomeTotal + expenseTotal;
+
+        // Query 3: ลิสต์รายการ (เหมือนเดิม)
         String query = "SELECT T.*, C." + DatabaseHelper.COL_CAT_NAME + " AS category_name, C." + DatabaseHelper.COL_CAT_ICON +
                 " FROM " + DatabaseHelper.TABLE_TRANSACTIONS + " T" +
                 " INNER JOIN " + DatabaseHelper.TABLE_CATEGORIES + " C ON T." + DatabaseHelper.COL_TR_CATEGORY_ID + " = C." + DatabaseHelper.COL_CAT_ID +
@@ -151,8 +171,6 @@ public class CalendarFragment extends Fragment {
             double price = cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_TR_PRICE));
             String timestamp = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_TR_TIMESTAMP));
             int categoryId = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_TR_CATEGORY_ID));
-
-            // ✅ แก้ไข: ดึงค่าจาก category_name
             String categoryName = cursor.getString(cursor.getColumnIndexOrThrow("category_name"));
             String categoryIconName = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_CAT_ICON));
 
@@ -160,15 +178,20 @@ public class CalendarFragment extends Fragment {
         }
         cursor.close();
 
-        return new CalendarData(dailyTotal, newList);
+        return new CalendarData(incomeTotal, expenseTotal, netTotal, newList);
     }
 
+    // ✅ ปรับปรุง Class Helper ให้เก็บ 3 ค่า
     private static class CalendarData {
-        final double dailyTotal;
+        final double incomeTotal;
+        final double expenseTotal;
+        final double netTotal;
         final List<Transaction> newList;
 
-        CalendarData(double dailyTotal, List<Transaction> newList) {
-            this.dailyTotal = dailyTotal;
+        CalendarData(double incomeTotal, double expenseTotal, double netTotal, List<Transaction> newList) {
+            this.incomeTotal = incomeTotal;
+            this.expenseTotal = expenseTotal;
+            this.netTotal = netTotal;
             this.newList = newList;
         }
     }
