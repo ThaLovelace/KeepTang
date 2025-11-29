@@ -27,4 +27,16 @@
     <string name="total_expense">- ฿ %,.2f</string>
 
     <string name="toast_coming_soon">Coming Soon!</string>
+    <string name="more_reward_shop">Reward Shop (Coming Soon)</string>
+    <string name="more_manage_categories">Manage Categories (Coming Soon)</string>
+    <string name="more_link_bank">Link Bank Account (Coming Soon)</string>
+    <string name="checkin_dialog_title">Daily Check-in</string>
+    <string name="checkin_dialog_subtitle">Collect rewards every day!</string>
+    <string name="checkin_dialog_default_points">+10 Points</string>
+    <string name="checkin_dialog_collect_button">Collect</string>
+    <string name="charts_trend">Trend</string>
+    <string name="charts_spending_distribution">Spending Distribution</string>
+    <string name="charts_ai_thinking">AI is thinking...</string>
+    <string name="main_activity_press_back_again">Press back again to exit</string>
+    <string name="checkin_points_earned_format">+%d Points</string>
 </resources>

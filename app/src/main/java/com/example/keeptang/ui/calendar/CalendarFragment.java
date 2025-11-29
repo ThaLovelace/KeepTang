@@ -1,5 +1,6 @@
 package com.example.keeptang.ui.calendar;
 
+import android.app.AlertDialog;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -8,7 +9,10 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,6 +37,7 @@ import java.util.concurrent.Executors;
 public class CalendarFragment extends Fragment {
 
     private TextView tvPoints;
+    private LinearLayout btnPointsContainer;
 
     // ✅ เพิ่มตัวแปร UI ใหม่
     private TextView tvCalendarTotal;
@@ -63,7 +68,8 @@ public class CalendarFragment extends Fragment {
         executor = Executors.newSingleThreadExecutor();
         handler = new Handler(Looper.getMainLooper());
 
-        tvPoints = view.findViewById(R.id.tv_points_calendar);
+        tvPoints = view.findViewById(R.id.tv_points);
+        btnPointsContainer = view.findViewById(R.id.btn_points_container);
 
         // ✅ เชื่อมต่อ View ใหม่
         tvCalendarTotal = view.findViewById(R.id.tv_calendar_total);
@@ -80,6 +86,7 @@ public class CalendarFragment extends Fragment {
         selectedDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Calendar.getInstance().getTime());
 
         setupCalendarListener();
+        setupPointsClickListener();
 
         return view;
     }
@@ -99,15 +106,22 @@ public class CalendarFragment extends Fragment {
         });
     }
 
+    private void setupPointsClickListener() {
+        btnPointsContainer.setOnClickListener(v -> {
+            Gamification.CheckInResult checkInResult = gamificationLogic.performDailyCheckIn();
+            showCheckInDialog(checkInResult.pointsEarned, checkInResult.streak);
+        });
+    }
+
     private void refreshData() {
         executor.execute(() -> {
-            int currentPoints = gamificationLogic.performDailyCheckIn();
+            Gamification.CheckInResult currentPoints = gamificationLogic.performDailyCheckIn();
             CalendarData data = loadDataForSelectedDate();
 
             handler.post(() -> {
                 if (getContext() == null) return;
 
-                tvPoints.setText(String.valueOf(currentPoints));
+                tvPoints.setText(String.valueOf(currentPoints.totalPoints));
 
                 // ✅ อัปเดต UI ทั้ง 3 ยอด
                 tvCalendarTotal.setText("฿ " + String.format(Locale.getDefault(), "%,.2f", data.netTotal));
@@ -119,6 +133,55 @@ public class CalendarFragment extends Fragment {
                 transactionAdapter.notifyDataSetChanged();
             });
         });
+    }
+
+    private void showCheckInDialog(int pointsEarned, int streak) {
+        if (getContext() == null) return;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_checkin, null);
+        builder.setView(dialogView);
+
+        AlertDialog dialog = builder.create();
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        }
+
+        TextView tvDialogPoints = dialogView.findViewById(R.id.tv_checkin_points);
+        Button btnCollect = dialogView.findViewById(R.id.btn_collect);
+
+        tvDialogPoints.setText("+" + pointsEarned + " Points");
+
+        for (int i = 1; i <= 7; i++) {
+            int resId = getResources().getIdentifier("day_" + i, "id", getContext().getPackageName());
+            View dayView = dialogView.findViewById(resId);
+
+            if (dayView != null) {
+                TextView tvDayPoints = dayView.findViewById(R.id.tv_day_points);
+                ImageView ivIcon = dayView.findViewById(R.id.iv_day_icon);
+
+                int dayPoints = gamificationLogic.getPointsForDay(i);
+                tvDayPoints.setText("+" + dayPoints);
+
+                if (i == 5) ivIcon.setImageResource(R.drawable.icon_10point);
+                else if (i == 7) ivIcon.setImageResource(R.drawable.icon_15point);
+                else ivIcon.setImageResource(R.drawable.icon_5point);
+
+                if (i < streak) {
+                    dayView.setAlpha(0.5f);
+                    ivIcon.setImageResource(R.drawable.icon_check);
+                } else if (i == streak) {
+                    dayView.setBackgroundResource(R.drawable.button_selector_yellow);
+                    dayView.setAlpha(1.0f);
+                } else {
+                    dayView.setBackgroundResource(R.drawable.rounded_edittext_white);
+                    dayView.setAlpha(1.0f);
+                }
+            }
+        }
+
+        btnCollect.setOnClickListener(v -> dialog.dismiss());
+        dialog.show();
     }
 
     private CalendarData loadDataForSelectedDate() {

@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">KeepTang</string>
+
+    <string name="home_title">หน้าหลัก</string>
+    <string name="default_points">100</string>
+    <string name="income">รายรับ</string>
+    <string name="paid">รายจ่าย</string>
+    <string name="transaction_title">รายการล่าสุด</string>
+
+    <string name="nav_calendar">ปฏิทิน</string>
+    <string name="nav_add">เพิ่มรายการ</string>
+    <string name="nav_chart">กราฟสรุป</string>
+    <string name="nav_more">ตั้งค่า</string>
+
+    <string name="calendar_total">รวมสุทธิ</string>
+
+    <string name="nav_back">ย้อนกลับ</string>
+    <string name="nav_save">บันทึก</string>
+    <string name="category_icon_desc">ไอคอนหมวดหมู่</string>
+    <string name="picker_title">เลือกหมวดหมู่</string>
+    <string name="error_fill_all">กรุณากรอกข้อมูลให้ครบถ้วน</string>
+    <string name="toast_saved">บันทึกเรียบร้อย!</string>
+    <string name="toast_error">เกิดข้อผิดพลาดในการบันทึก</string>
+    <string name="picker_not_selected">ยังไม่ได้เลือก</string>
+
+    <string name="total_balance">฿ %,.2f</string>
+    <string name="total_income">+ ฿ %,.2f</string>
+    <string name="total_expense">- ฿ %,.2f</string>
+
+    <string name="toast_coming_soon">เร็วๆ นี้!</string>
+    <string name="more_reward_shop">ร้านค้าแลกแต้ม (เร็วๆ นี้)</string>
+    <string name="more_manage_categories">จัดการหมวดหมู่ (เร็วๆ นี้)</string>
+    <string name="more_link_bank">เชื่อมต่อบัญชีธนาคาร (เร็วๆ นี้)</string>
+
+    <string name="checkin_dialog_title">เช็คอินประจำวัน</string>
+    <string name="checkin_dialog_subtitle">สะสมรางวัลได้ทุกวัน!</string>
+    <string name="checkin_dialog_default_points">+10 แต้ม</string>
+    <string name="checkin_dialog_collect_button">รับรางวัล</string>
+    <string name="charts_trend">แนวโน้ม</string>
+    <string name="charts_spending_distribution">การกระจายรายจ่าย</string>
+    <string name="charts_ai_thinking">AI กำลังวิเคราะห์...</string>
+    <string name="main_activity_press_back_again">กดอีกครั้งเพื่อออกจากแอป</string>
+    <string name="checkin_points_earned_format">+%d แต้ม</string>
+</resources>

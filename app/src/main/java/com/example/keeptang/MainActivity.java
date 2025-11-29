@@ -1,6 +1,10 @@
 package com.example.keeptang;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -17,6 +21,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
+    private boolean doubleBackToExitPressedOnce = false;
+    private Handler handler = new Handler(Looper.getMainLooper());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +73,24 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.nav_host_fragment_activity_main, fragment);
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        BottomNavigationView navView = binding.navView;
+        if (navView.getSelectedItemId() != R.id.navigation_home) {
+            navView.setSelectedItemId(R.id.navigation_home);
+        } else {
+            if (doubleBackToExitPressedOnce) {
+                super.onBackPressed();
+                return;
+            }
+
+            this.doubleBackToExitPressedOnce = true;
+            Toast.makeText(this, R.string.main_activity_press_back_again, Toast.LENGTH_SHORT).show();
+
+            handler.postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
+        }
     }
 
     // ✅✅✅ ฟังก์ชันสำหรับให้หน้าอื่นสั่งย้ายกลับมาหน้า Home ✅✅✅

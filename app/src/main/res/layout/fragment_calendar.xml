@@ -37,6 +37,7 @@
                     android:textColor="@color/black" />
 
                 <LinearLayout
+                    android:id="@+id/btn_points_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -51,7 +52,7 @@
                         android:contentDescription="@null" />
 
                     <TextView
-                        android:id="@+id/tv_points_calendar"
+                        android:id="@+id/tv_points"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/default_points"

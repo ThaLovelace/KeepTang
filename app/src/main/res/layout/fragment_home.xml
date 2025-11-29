@@ -36,6 +36,7 @@
                     android:layout_centerVertical="true"
                     android:textColor="@color/black" />
                 <LinearLayout
+                android:id="@+id/btn_points_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -87,7 +88,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android.orientation="horizontal"
                 android:layout_marginTop="16dp">
 
                 <androidx.cardview.widget.CardView
@@ -160,19 +161,7 @@
                         android:text="@string/transaction_title"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="@color/black" /> <ImageView
-                    android:id="@+id/icon_delete"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/icon_delete"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginStart="16dp" />
-                    <ImageView
-                        android:id="@+id/icon_edit"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/icon_edit"
-                        android:layout_toStartOf="@id/icon_delete" />
+                        android:textColor="@color/black" />
                 </RelativeLayout>
 
                 <androidx.recyclerview.widget.RecyclerView

@@ -1,7 +1,7 @@
 package com.example.keeptang.ui.input;
 
 import android.content.Context;
-import android.content.DialogInterface; // ✅ Import เพิ่ม
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -25,20 +25,39 @@ public class ManualPickerFragment extends BottomSheetDialogFragment implements C
 
     public interface CategorySelectListener {
         void onCategorySelected(Category category);
-        void onPopupDismissed(); // ✅ เพิ่มบรรทัดนี้: เพื่อสั่งหน้าแม่ให้ซ่อนพื้นหลังดำ
+        void onPopupDismissed();
     }
 
     private CategorySelectListener mListener;
-
     private RecyclerView recyclerView;
     private CategoryPickerAdapter adapter;
     private List<Category> categoryList;
     private DatabaseHelper dbHelper;
 
+    // ตัวแปรเช็คว่าเป็นรายจ่ายหรือไม่
+    private boolean isExpenseMode = true;
+
+    // ✅ ฟังก์ชันสำหรับส่งค่า "โหมด" เข้ามา
+    public static ManualPickerFragment newInstance(boolean isExpense) {
+        ManualPickerFragment fragment = new ManualPickerFragment();
+        Bundle args = new Bundle();
+        args.putBoolean("IS_EXPENSE", isExpense);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            isExpenseMode = getArguments().getBoolean("IS_EXPENSE", true);
+        }
+    }
+
+    // ... (onAttach เหมือนเดิม) ...
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        // โค้ดส่วนนี้ถูกต้องแล้ว (รองรับทั้ง getTargetFragment, getParentFragment, context)
         if (getTargetFragment() instanceof CategorySelectListener) {
             mListener = (CategorySelectListener) getTargetFragment();
         } else if (getParentFragment() instanceof CategorySelectListener) {
@@ -56,7 +75,7 @@ public class ManualPickerFragment extends BottomSheetDialogFragment implements C
         dbHelper = new DatabaseHelper(getContext());
         recyclerView = view.findViewById(R.id.recycler_category_picker);
 
-        loadCategoriesFromDatabase();
+        loadCategoriesFromDatabase(); // โหลดตามโหมด
 
         adapter = new CategoryPickerAdapter(getContext(), categoryList, this);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
@@ -69,14 +88,21 @@ public class ManualPickerFragment extends BottomSheetDialogFragment implements C
         categoryList = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        String selection = DatabaseHelper.COL_CAT_NAME + " != ?";
-        String[] selectionArgs = {"รายรับ"}; // หรือ "Income" ถ้าฐานข้อมูลเป็นภาษาอังกฤษ
+        // ✅ กรองข้อมูลตาม ID (ที่เรา Hardcode ไว้ใน DatabaseHelper)
+        // รายจ่าย = ID 1-9, 14
+        // รายรับ = ID 10-13
+        String selection;
+        if (isExpenseMode) {
+            selection = DatabaseHelper.COL_CAT_ID + " IN (1,2,3,4,5,6,7,8,9,14)";
+        } else {
+            selection = DatabaseHelper.COL_CAT_ID + " IN (10,11,12,13)";
+        }
 
         Cursor cursor = db.query(
                 DatabaseHelper.TABLE_CATEGORIES,
                 null,
                 selection,
-                selectionArgs,
+                null,
                 null, null, null
         );
 
@@ -84,32 +110,31 @@ public class ManualPickerFragment extends BottomSheetDialogFragment implements C
             int id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_CAT_ID));
             String name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_CAT_NAME));
             String iconName = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_CAT_ICON));
-
             categoryList.add(new Category(id, name, iconName));
         }
         cursor.close();
 
-        categoryList.add(new Category(-1, "+", "icon_add_plus"));
+        // ปุ่ม Add เพิ่มเฉพาะตอนเป็นรายจ่าย (หรือจะใส่ทั้งคู่ก็ได้)
+        if (isExpenseMode) {
+            categoryList.add(new Category(-1, "+", "icon_add_plus"));
+        }
     }
 
-    // ✅✅✅ เพิ่มเมธอดนี้: ทำงานเมื่อ Popup ถูกปิด (ไม่ว่าจะด้วยวิธีไหน)
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
         if (mListener != null) {
-            mListener.onPopupDismissed(); // บอกหน้าแม่ให้เอาพื้นหลังสีดำออก
+            mListener.onPopupDismissed();
         }
     }
 
     @Override
     public void onCategoryClick(Category category) {
-        if (category.getId() == -1) {
-            // ปุ่ม + ยังไม่ทำอะไร
-        } else {
+        if (category.getId() != -1) {
             if (mListener != null) {
                 mListener.onCategorySelected(category);
             }
-            dismiss(); // สั่งปิด Popup (มันจะไปเรียก onDismiss ทำงานต่อเอง)
+            dismiss();
         }
     }
 }
